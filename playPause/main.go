@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"sync"
 	"time"
 )
@@ -27,8 +26,6 @@ func routine(command <-chan string, wg *sync.WaitGroup) {
 				return
 			case "Pause":
 				status = "Pause"
-			default:
-				status = "Play"
 			}
 		default:
 			if status == "Play" {
@@ -48,10 +45,8 @@ func main() {
 	for input != "Stop" {
 		_, err := fmt.Scanln(&input)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
 			return
 		}
-		time.Sleep(1 * time.Second)
 		command <- input
 	}
 	wg.Wait()
