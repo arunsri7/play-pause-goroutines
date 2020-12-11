@@ -25,10 +25,10 @@ func getParameters(w http.ResponseWriter, r *http.Request) {
 	var req Request
 	json.NewDecoder(r.Body).Decode(&req)
 	var wg sync.WaitGroup
-	wg.Add(1)
 	input := req.Command
 	command := make(chan string)
 	response := make(chan string)
+
 	if req.Command == "Pause" {
 		command <- req.Command
 	} else {
@@ -44,26 +44,9 @@ func getParameters(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
-// func Pause(w http.ResponseWriter, r *http.Request) {
-// 	var req Request
-// 	json.NewDecoder(r.Body).Decode(&req)
-// 	command := make(chan string)
-// 	response := make(chan string)
-// 	fmt.Println(req.Command)
-// 	command <- req.Command
-// 	tmp := <-response
-// 	fmt.Println(tmp)
-// 	res := Response{
-// 		Status: tmp,
-// 	}
-// 	w.Header().Set("Content-Type", "application/json")
-// 	json.NewEncoder(w).Encode(res)
-// }
-
 func main() {
-	fmt.Println("Go Docker Tutorial")
+	fmt.Println("Server Running")
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/start", getParameters)
-	// router.HandleFunc("/pause", Pause)
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
