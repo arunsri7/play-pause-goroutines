@@ -26,8 +26,8 @@ func Routine(command chan string, response chan string, wg *sync.WaitGroup) {
 				return
 			case "Pause":
 				fmt.Println("Trying to Pause")
-				response <- "Pasued"
-				status = "Pause brooooo"
+				response <- "Paused"
+				status = "Pause"
 			default:
 				status = "Play"
 			}

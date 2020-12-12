@@ -21,14 +21,21 @@ type Response struct {
 	Status string
 }
 
+var (
+	command chan string
+)
+
+func init() {
+	command = make(chan string)
+}
+
 func getParameters(w http.ResponseWriter, r *http.Request) {
 	var req Request
 	json.NewDecoder(r.Body).Decode(&req)
 	var wg sync.WaitGroup
 	input := req.Command
-	command := make(chan string)
-	response := make(chan string)
 
+	response := make(chan string)
 	if req.Command == "Pause" {
 		command <- req.Command
 	} else {
