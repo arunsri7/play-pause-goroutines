@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	playpause "playpauseapi/playplause"
-	"sync"
 
 	"github.com/gorilla/mux"
 )
@@ -22,25 +21,26 @@ type Response struct {
 }
 
 var (
-	command chan string
+	command  chan string
+	response chan string
+	// runningChans = map[string]chan string
 )
 
 func init() {
-	command = make(chan string)
 }
 
 func getParameters(w http.ResponseWriter, r *http.Request) {
 	var req Request
 	json.NewDecoder(r.Body).Decode(&req)
-	var wg sync.WaitGroup
 	input := req.Command
-
-	response := make(chan string)
-	if req.Command == "Pause" {
+	if req.Command == "Pause" || req.Command == "Stop" {
 		command <- req.Command
 	} else {
 		fmt.Println("input", input)
-		go playpause.Routine(command, response, &wg)
+		response = make(chan string)
+		command = make(chan string)
+		// runningChans["test_name"] = command
+		go playpause.Routine(command, response)
 	}
 	tmp := <-response
 	fmt.Println(tmp)

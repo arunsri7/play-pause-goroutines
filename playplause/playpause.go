@@ -2,7 +2,6 @@ package playpause
 
 import (
 	"fmt"
-	"sync"
 	"time"
 )
 
@@ -14,8 +13,7 @@ func work() {
 	fmt.Println(i)
 }
 
-func Routine(command chan string, response chan string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func Routine(command chan string, response chan string) {
 	var status = "Play"
 	response <- "started"
 	for {
@@ -23,11 +21,12 @@ func Routine(command chan string, response chan string, wg *sync.WaitGroup) {
 		case cmd := <-command:
 			switch cmd {
 			case "Stop":
+				response <- "Stopped"
 				return
 			case "Pause":
-				fmt.Println("Trying to Pause")
-				response <- "Paused"
+				fmt.Println("Pausing")
 				status = "Pause"
+				response <- "Paused"
 			default:
 				status = "Play"
 			}
@@ -37,4 +36,5 @@ func Routine(command chan string, response chan string, wg *sync.WaitGroup) {
 			}
 		}
 	}
+
 }
