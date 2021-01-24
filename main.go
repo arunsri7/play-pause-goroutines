@@ -23,7 +23,7 @@ type Response struct {
 var (
 	command  chan string
 	response chan string
-	// runningChans = map[string]chan string
+	//runningChans = map[string]chan string
 )
 
 func init() {
@@ -54,6 +54,6 @@ func getParameters(w http.ResponseWriter, r *http.Request) {
 func main() {
 	fmt.Println("Server Running")
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/start", getParameters)
+	router.HandleFunc("/playPause", getParameters)
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
